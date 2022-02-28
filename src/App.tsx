@@ -1,16 +1,12 @@
-import { FixedSizeList as List } from "react-window";
-
 import { useAppState } from "./hooks/useAppState";
 
+import VRList from "./components/VRList";
 import Ticket from "./components/Ticket";
 import Filters from "./components/Filters";
 import TicketEditModal from "./components/TicketEditModal";
 
 function App() {
   const { appState, handleIdxChange } = useAppState();
-
-  // Virtual list row
-  const Row = ({ index, style }: { index: number; style: any }) => <Ticket idx={index} style={style} />;
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-cyan-500 to-blue-500">
@@ -25,10 +21,12 @@ function App() {
       </div>
 
       {/* Ticket List */}
-      <div className="overflow-auto h-3/4  p-4">
-        <List height={600} itemCount={appState.ticketList.length} itemSize={250} width={400}>
-          {Row}
-        </List>
+      <div className="h-3/4  p-4" id="list">
+        <VRList>
+          {appState.ticketList.map((ticket, idx) => (
+            <Ticket key={ticket.id} idx={idx} />
+          ))}
+        </VRList>
       </div>
 
       {/* One Modal that will update | create a ticket. */}

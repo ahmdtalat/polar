@@ -2,26 +2,24 @@ import { useAppState } from "../hooks/useAppState";
 
 type Props = {
   idx: number;
-  style: any;
 };
 
-const Ticket = ({ idx, style }: Props) => {
+const Ticket = ({ idx }: Props) => {
   const {
     appState: { ticketList },
     handleIdxChange,
   } = useAppState();
+
+  if (!ticketList[idx]) return null;
+
   const { status, created_at, created_by, description, priority, subject } = ticketList[idx];
 
   return (
     <div
-      style={{
-        // passing the style object that comes from React-window
-        // to handle the exact position of an element in the VR_List
-        ...style,
-        width: "22rem",
-        height: style.height - 30,
-      }}
       className="card max-w-sm bg-base-100 shadow-xl m-4"
+      style={{
+        height: "250px",
+      }}
     >
       <div className="card-body">
         <div className="flex items-center">
