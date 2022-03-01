@@ -1,38 +1,42 @@
-import React, { Children, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import type { TicketType } from "../../tickets";
+import Ticket from "./Ticket";
 
 type Props = {
-  children: React.ReactNode;
+  items: TicketType[];
 };
 
 const rowHeight = 280; // fixed row height
-const clientHeight = 700; // fixed client screen height
+const clientHeight = 600; // fixed client screen height
 const screenItemsCount = 3; // clientH / rowH
 
 let firstPosition: number;
 let lastScrollTop: number;
 
-const VRList = ({ children }: Props) => {
-  const childrenArray = Children.toArray(children); // All Rows
-
+const VRList = ({ items }: Props) => {
   const [startPosition, setStartPosition] = useState(0);
   const [slice, setSlice] = useState<(React.ReactChild | React.ReactFragment | React.ReactPortal)[]>([]);
 
   const handleOnScroll = (e: any) => {
-    const scrollTop = e.target.scrollTop;
-    firstPosition = Math.floor(scrollTop / rowHeight) - screenItemsCount;
-    firstPosition = firstPosition < 0 ? 0 : firstPosition;
+    setTimeout(() => {
+      const scrollTop = e.target.scrollTop;
+      firstPosition = Math.floor(scrollTop / rowHeight) - screenItemsCount;
+      firstPosition = firstPosition < 0 ? 0 : firstPosition;
 
-    if (!lastScrollTop || Math.abs(scrollTop - lastScrollTop) > clientHeight / 3) {
-      renderSlice(firstPosition, screenItemsCount * 3);
-      lastScrollTop = scrollTop;
-    }
+      if (!lastScrollTop || Math.abs(scrollTop - lastScrollTop) > clientHeight / 3) {
+        renderSlice(firstPosition, screenItemsCount * 3);
+        lastScrollTop = scrollTop;
+      }
+    }, 50);
   };
 
   function renderSlice(fromPosition: number, itemsToRender: number) {
     let toPosition = fromPosition + itemsToRender;
-    if (toPosition > childrenArray.length) toPosition = childrenArray.length;
+    if (toPosition > items.length) toPosition = items.length;
 
-    const slice = childrenArray.slice(fromPosition, toPosition);
+    const slice = items.slice(fromPosition, toPosition).map((_, idx) => <Ticket idx={idx + fromPosition} key={idx} />);
+
     setSlice(slice);
     setStartPosition(fromPosition);
   }
@@ -47,7 +51,7 @@ const VRList = ({ children }: Props) => {
       className="h-full relative overflow-auto scroll-smooth"
       id="container"
       style={{
-        height: "700px",
+        height: "600px",
         width: "26rem",
       }}
       onScroll={handleOnScroll}
@@ -56,7 +60,7 @@ const VRList = ({ children }: Props) => {
         id="scroller"
         className="opacity-0 absolute top-0 left-0 w-1"
         style={{
-          height: childrenArray.length * rowHeight + "px",
+          height: items.length * rowHeight + "px",
         }}
       />
       {slice.map((row, idx) => (

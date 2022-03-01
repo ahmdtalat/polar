@@ -1,7 +1,6 @@
 import { useAppState } from "./hooks/useAppState";
 
 import VRList from "./components/VRList";
-import Ticket from "./components/Ticket";
 import Filters from "./components/Filters";
 import TicketEditModal from "./components/TicketEditModal";
 
@@ -22,11 +21,7 @@ function App() {
 
       {/* Ticket List */}
       <div className="h-3/4  p-4" id="list">
-        <VRList>
-          {appState.ticketList.map((ticket, idx) => (
-            <Ticket key={ticket.id} idx={idx} />
-          ))}
-        </VRList>
+        <VRList items={appState.ticketList} />
       </div>
 
       {/* One Modal that will update | create a ticket. */}
