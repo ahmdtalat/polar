@@ -21,7 +21,7 @@ function App() {
 
       {/* Ticket List */}
       <div className="h-3/4  p-4" id="list">
-        <VRList items={appState.ticketList} />
+        <VRList items={appState.ticketList} rowHeight={280} clientHeight={600} clientWidth={400} screenItemsCount={3} />
       </div>
 
       {/* One Modal that will update | create a ticket. */}
